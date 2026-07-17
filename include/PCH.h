@@ -16,4 +16,4 @@
 #define DLLEXPORT __declspec(dllexport)
 namespace logger = SKSE::log;
 using namespace std::literals;
-#include <Hooking.h>
+#include "Hooking.h"
