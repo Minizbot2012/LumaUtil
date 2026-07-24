@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-namespace MPL::API
+namespace MPL::API::MMSF
 {
     class ServiceMap
     {
@@ -21,11 +21,11 @@ namespace MPL::API
         };
         ServiceMap* API;
     };
-
+    static const char* sender = "MMSF";
     [[nodiscard]] inline ServiceMap* RequestMMSFAPI()
     {
         MMSFMessage message;
-        SKSE::GetMessagingInterface()->Dispatch(MMSFMessage::kMessage_GetInterface, &message, sizeof(MMSFMessage), nullptr);
+        SKSE::GetMessagingInterface()->Dispatch(MMSFMessage::kMessage_GetInterface, &message, sizeof(MMSFMessage), sender);
         if (message.API != nullptr)
         {
             return message.API;

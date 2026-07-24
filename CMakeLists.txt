@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.40)
 set(NAME "LumaUtil" CACHE STRING "")
-set(VERSION 1.6.0.0 CACHE STRING "")
+set(VERSION 1.9.0.0 CACHE STRING "")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ---- Cache build vars ----
@@ -22,7 +22,6 @@ else ()
 endif ()
 
 # ---- Project ----
-
 
 project(
  ${NAME}
@@ -50,8 +49,6 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF)
 
 
 # ---- Add source files ----
-set(BUILD_TESTS OFF CACHE BOOL "Disable Tests" FORCE)
-add_subdirectory(extern/CommonLibSSE)
 include(CMake/headerlist.cmake)
 include(CMake/sourcelist.cmake)
 
@@ -90,7 +87,10 @@ target_include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+find_package(CommonLibSSE CONFIG REQUIRED)
+find_package(DirectXTK CONFIG REQUIRED)
 find_package(reflectcpp CONFIG REQUIRED)
+
 
 target_link_libraries(
  ${PROJECT_NAME}
@@ -112,14 +112,13 @@ if (MSVC)
    /sdl             # Enable Additional Security Checks
    /utf-8           # Set Source and Executable character sets to UTF-8
    /Zi              # Debug Information Format
-   /MD
    /permissive-     # Standards conformance
    /Zc:preprocessor # Enable preprocessor conformance mode
 
    /wd4200          # nonstandard extension used : zero-sized array in struct/union
 
-   "$<$<CONFIG:DEBUG>:>"
-   "$<$<CONFIG:RELEASE>:/Zc:inline;/JMC-;/Ob3>"
+   "$<$<CONFIG:DEBUG>:/MDd>"
+   "$<$<CONFIG:RELEASE>:/Zc:inline;/JMC-;/Ob3;/MD>"
  )
 
   target_link_options(

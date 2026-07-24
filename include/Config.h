@@ -7,7 +7,7 @@
 #include <Config/Templates.h>
 #include <Config/Weathers.h>
 #include <Config/Worldspace.h>
-#include <MMSF_API.h>
+#include <Externals/MMSF_API.h>
 #include <filesystem>
 #include <format>
 #include <string>
@@ -33,7 +33,7 @@ namespace MPL::Config
         SKSE::RegistrationSet<const RE::TESObjectCELL*> cellLoad{ "OnCellChange"sv };
         std::unordered_map<std::filesystem::path, bool> folder_map;
         RE::TESRegion* lastRegion;
-        MPL::API::ServiceMap* mmsfAPI = nullptr;
+        MPL::API::MMSF::ServiceMap* MMSF = nullptr;
         std::unordered_map<RE::TESWeather*, MPL::WeatherPatcher::WeatherBaseline> weatherBaselines;
         std::unordered_map<std::string, MPL::WeatherPatcher::Settings> settingsCache;
     };

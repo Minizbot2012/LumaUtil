@@ -13,7 +13,8 @@
 #include <format>
 #include <rfl/json.hpp>
 // clang-format on
-#define DLLEXPORT __declspec(dllexport)
 namespace logger = SKSE::log;
+using namespace REX;
 using namespace std::literals;
+#define DLLEXPORT __declspec(dllexport)
 #include "Hooking.h"

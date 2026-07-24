@@ -1,3 +1,5 @@
+#include "Externals/MMSF_API.h"
+#include "SKSE/Interfaces.h"
 #include <Config.h>
 #include <Hooks.h>
 #include <Papyrus.h>
@@ -37,6 +39,19 @@ void Revert(SKSE::SerializationInterface* ser)
     MPL::Config::StatData::GetSingleton()->cellLoad.Revert(ser);
 }
 
+void MessageHandler(SKSE::MessagingInterface::Message* msg)
+{
+    auto sta = MPL::Config::StatData::GetSingleton();
+        switch (msg->type)
+        {
+        case SKSE::MessagingInterface::kPostLoad:
+            sta->MMSF = MPL::API::MMSF::RequestMMSFAPI();
+        break;
+    default:
+        break;
+    }
+}
+
 SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
     SKSE::Init(a_skse);
@@ -44,6 +59,7 @@ SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
     MPL::Hooks::Install();
     SKSE::GetPapyrusInterface()->Register(MPL::Papyrus::Bind);
     SKSE::GetPapyrusInterface()->Register(MPL::Papyrus::BindWeatherPatcher);
+    SKSE::GetMessagingInterface()->RegisterListener(MessageHandler);
     SKSE::GetMessagingInterface()->RegisterListener(MPL::WeatherPatcher::OnSKSEMessage);
     auto ser = SKSE::GetSerializationInterface();
     ser->SetUniqueID('LUMA');

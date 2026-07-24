@@ -1,3 +1,0 @@
-CompileFlags:
-  Remove: [-std=*, /std:*]
-  Add: [--driver-mode=cl, /std:c++23preview, -Iinclude, -Iextern/CommonLibSSE/include]

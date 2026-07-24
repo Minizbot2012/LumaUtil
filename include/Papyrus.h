@@ -1,6 +1,6 @@
 #pragma once
 #include <Config.h>
-#include <MMSF_API.h>
+#include <Externals/MMSF_API.h>
 #include <WeatherPatcher.h>
 namespace MPL::Papyrus
 {
@@ -9,10 +9,6 @@ namespace MPL::Papyrus
         if (cl != nullptr)
         {
             auto sta = MPL::Config::StatData::GetSingleton();
-            if (sta->mmsfAPI == nullptr)
-            {
-                sta->mmsfAPI = MPL::API::RequestMMSFAPI();
-            }
             if (cl->extraList.HasType<RE::ExtraCellSkyRegion>())
             {
                 auto dat = cl->extraList.GetByType<RE::ExtraCellSkyRegion>();
@@ -21,7 +17,7 @@ namespace MPL::Papyrus
 #ifndef NDEBUG
                     logger::info("{:X}:{}", dat->skyRegion->GetLocalFormID(), dat->skyRegion->sourceFiles.array->front()->GetFilename());
 #endif
-                    return sta->mmsfAPI->LookupEDIDForFormID(dat->skyRegion->formID);
+                    return sta->MMSF->LookupEDIDForFormID(dat->skyRegion->formID);
                 }
             }
             if (cl->IsExteriorCell())
@@ -33,11 +29,11 @@ namespace MPL::Papyrus
                     logger::info("{:X}:{}", sky->region->GetLocalFormID(), sky->region->sourceFiles.array->front()->GetFilename());
 #endif
                     sta->lastRegion = sky->region;
-                    return sta->mmsfAPI->LookupEDIDForFormID(sky->region->formID);
+                    return sta->MMSF->LookupEDIDForFormID(sky->region->formID);
                 }
                 else if (sta->lastRegion)
                 {
-                    return sta->mmsfAPI->LookupEDIDForFormID(sta->lastRegion->formID);
+                    return sta->MMSF->LookupEDIDForFormID(sta->lastRegion->formID);
                 }
             }
         }
@@ -49,14 +45,10 @@ namespace MPL::Papyrus
         if (cl != nullptr && !region.empty())
         {
             auto sta = MPL::Config::StatData::GetSingleton();
-            if (sta->mmsfAPI == nullptr)
-            {
-                sta->mmsfAPI = MPL::API::RequestMMSFAPI();
-            }
             if (cl->extraList.HasType<RE::ExtraCellSkyRegion>())
             {
                 auto dat = cl->extraList.GetByType<RE::ExtraCellSkyRegion>();
-                auto skr = sta->mmsfAPI->LookupCachedForm(region)->As<RE::TESRegion>();
+                auto skr = sta->MMSF->LookupCachedForm(region)->As<RE::TESRegion>();
                 if (skr != nullptr)
                 {
                     dat->skyRegion = skr;
@@ -71,7 +63,7 @@ namespace MPL::Papyrus
             }
             else
             {
-                auto skr = sta->mmsfAPI->LookupCachedForm(region)->As<RE::TESRegion>();
+                auto skr = sta->MMSF->LookupCachedForm(region)->As<RE::TESRegion>();
                 if (skr != nullptr)
                 {
                     auto dat = RE::BSExtraData::Create<RE::ExtraCellSkyRegion>();
