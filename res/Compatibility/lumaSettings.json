@@ -1,0 +1,8 @@
+{
+    "id":  "LumaUtil",
+    "LumaManifest":  true,
+    "detailedLogging":  true,
+    "notifications":  false,
+    "version":  "1.8.0.0",
+    "compatibility":  []
+}

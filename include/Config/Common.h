@@ -4,31 +4,6 @@
 
 namespace MPL::Config
 {
-    static bool IEquals(std::string_view a_lhs, std::string_view a_rhs)
-    {
-        return a_lhs.size() == a_rhs.size() &&
-               std::ranges::equal(a_lhs, a_rhs, [](char a, char b)
-                   { return std::tolower(static_cast<unsigned char>(a)) == std::tolower(static_cast<unsigned char>(b)); });
-    }
-
-    struct IEqualsOp
-    {
-        bool operator()(const std::string& a_lhs, const std::string& a_rhs) const
-        {
-            return IEquals(a_lhs, a_rhs);
-        }
-    };
-
-    struct IHash
-    {
-        std::size_t operator()(const std::string& a_str) const
-        {
-            auto lower = a_str;
-            std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
-            return std::hash<std::string>()(lower);
-        }
-    };
-
     struct NiColor
     {
         std::optional<uint32_t> red;

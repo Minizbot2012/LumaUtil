@@ -16,16 +16,21 @@ namespace MPL::Config
             {
                 return "null";
             }
-            auto form = this->Get<RE::TESForm>();
+            const auto* form = this->Get<RE::TESForm>();
+            if (!form)
+            {
+                return "null";
+            }
             if (form->sourceFiles.array == nullptr)
             {
                 return "null";
             }
-            if (auto edid = form->GetFormEditorID(); strcmp(edid, "") != 0)
+            if (const auto* edid = form->GetFormEditorID(); edid && *edid)
             {
-                return std::string(form->GetFormEditorID());
+                return std::string(edid);
             }
-            return format("{:06X}:{}", form->GetLocalFormID(), form->GetFile(0)->GetFilename());
+            const auto* source = form->GetFile(0);
+            return source ? format("{:06X}:{}", form->GetLocalFormID(), source->GetFilename()) : "null";
         }
         static LiteForm FromID(RE::FormID id) { return { .formID = id }; };
         static LiteForm FromForm(RE::TESForm* frm) { return { .formID = frm->formID }; }

@@ -1,7 +1,8 @@
-#include <WeatherPatcher.h>
 #include <Hooking.h>
 #include <Config.h>
 #include <Hooks.h>
+#include <LumaService.h>
+#include <DetailedLogging.h>
 namespace MPL::Hooks
 {
     struct InitCell
@@ -11,13 +12,15 @@ namespace MPL::Hooks
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (a_ref != nullptr && a_ref->sourceFiles.array != nullptr)
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
             {
-#ifndef NDEBUG
-                logger::info("Loading Cell {:06X}:{}", a_ref->GetLocalFormID(), a_ref->GetFile(0)->GetFilename());
-#endif
+                DetailedLogging::Info(
+                    "Loading Cell {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
                 MPL::Config::LoadConfigFormID<MPL::Config::Cell::TESObjectCELL>(a_ref);
             }
+            LumaService::NotifyCellInitialized(a_ref);
         }
         static void post_hook()
         {
@@ -33,11 +36,12 @@ namespace MPL::Hooks
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (a_ref != nullptr && a_ref->sourceFiles.array != nullptr)
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
             {
-#ifndef NDEBUG
-                logger::info("Loading IS {:06X}:{}", a_ref->GetLocalFormID(), a_ref->GetFile(0)->GetFilename());
-#endif
+                DetailedLogging::Info(
+                    "Loading IS {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
                 MPL::Config::LoadConfigFormID<MPL::Config::ImageSpace::TESImageSpace>(a_ref);
             }
         }
@@ -55,13 +59,15 @@ namespace MPL::Hooks
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (a_ref != nullptr && a_ref->sourceFiles.array != nullptr)
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
             {
-#ifndef NDEBUG
-                logger::info("Loading ObjRef {:06X}:{}", a_ref->GetLocalFormID(), a_ref->GetFile(0)->GetFilename());
-#endif
+                DetailedLogging::Info(
+                    "Loading ObjRef {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
                 MPL::Config::LoadConfigFormID<MPL::Config::TESObjectREFR>(a_ref);
             }
+            LumaService::NotifyReferenceInitialized(a_ref);
         }
         static void post_hook()
         {
@@ -77,11 +83,12 @@ namespace MPL::Hooks
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (a_ref != nullptr && a_ref->sourceFiles.array != nullptr)
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
             {
-#ifndef NDEBUG
-                logger::info("Loading TMPL {:06X}:{}", a_ref->GetLocalFormID(), a_ref->GetFile(0)->GetFilename());
-#endif
+                DetailedLogging::Info(
+                    "Loading TMPL {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
                 MPL::Config::LoadConfigFormID<MPL::Config::Template::BGSLightingTemplate>(a_ref);
             }
         }
@@ -99,11 +106,12 @@ namespace MPL::Hooks
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (a_ref != nullptr && a_ref->sourceFiles.array != nullptr)
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
             {
-#ifndef NDEBUG
-                logger::info("Loading Light {:06X}:{}", a_ref->GetLocalFormID(), a_ref->GetFile(0)->GetFilename());
-#endif
+                DetailedLogging::Info(
+                    "Loading Light {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
                 MPL::Config::LoadConfigFormID<MPL::Config::TESObjectLIGH>(a_ref);
             }
         }
@@ -121,11 +129,12 @@ namespace MPL::Hooks
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (a_ref != nullptr && a_ref->sourceFiles.array != nullptr && !a_ref->sourceFiles.array->empty())
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
             {
-#ifndef NDEBUG
-                logger::info("Loading WorldSpace {:06X}:{}", a_ref->GetLocalFormID(), a_ref->GetFile(0)->GetFilename());
-#endif
+                DetailedLogging::Info(
+                    "Loading WorldSpace {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
                 Config::LoadConfigFormID<MPL::Config::Worldspace::TESWorldSpace>(a_ref);
             }
         }
@@ -142,11 +151,14 @@ namespace MPL::Hooks
         static inline constexpr VariantIndex index = VariantIndex(0x98, 0x98, 0x99);
         static inline void thunk(RE::PlayerCharacter* a_ref, const RE::TESObjectCELL* cl)
         {
+            auto* destination = const_cast<RE::TESObjectCELL*>(cl);
+            LumaService::NotifyCellChanging(destination);
             func(a_ref, cl);
             if (cl != nullptr)
             {
                 MPL::Config::StatData::GetSingleton()->cellLoad.QueueEvent(cl);
             }
+            LumaService::NotifyCellChanged(cl);
         }
         static void post_hook()
         {

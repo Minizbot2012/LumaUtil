@@ -149,10 +149,8 @@ namespace MPL::Config::Template
             if (this->fogPower) itm->fogPower = *this->fogPower;
             if (this->directionalXY) itm->directionalXY = *this->directionalXY;
             if (this->directionalZ) itm->directionalZ = *this->directionalZ;
-            if (this->lightFadeStart) itm->lightFadeStart = *this->lightFadeStart;
-            if (this->lightFadeEnd) itm->lightFadeEnd = *this->lightFadeEnd;
-            if (((uint32_t) this->lightFadeStart.value_or(0)) == 0) itm->lightFadeStart = 4096;
-            if (((uint32_t) this->lightFadeEnd.value_or(0)) == 0) itm->lightFadeEnd = 30720;
+            if (this->lightFadeStart) itm->lightFadeStart = *this->lightFadeStart == 0.0f ? 4096.0f : *this->lightFadeStart;
+            if (this->lightFadeEnd) itm->lightFadeEnd = *this->lightFadeEnd == 0.0f ? 30720.0f : *this->lightFadeEnd;
             if (this->inherit) this->inherit->Apply(&itm->lightingTemplateInheritanceFlags);
         }
         static INTERIOR_DATA From(Patch* itm)

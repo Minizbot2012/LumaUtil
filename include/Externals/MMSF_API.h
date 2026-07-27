@@ -24,7 +24,7 @@ namespace MPL::API::MMSF
     static const char* sender = "MMSF";
     [[nodiscard]] inline ServiceMap* RequestMMSFAPI()
     {
-        MMSFMessage message;
+        MMSFMessage message{};
         SKSE::GetMessagingInterface()->Dispatch(MMSFMessage::kMessage_GetInterface, &message, sizeof(MMSFMessage), sender);
         if (message.API != nullptr)
         {

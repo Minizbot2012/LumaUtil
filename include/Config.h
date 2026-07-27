@@ -7,6 +7,7 @@
 #include <Config/Templates.h>
 #include <Config/Weathers.h>
 #include <Config/Worldspace.h>
+#include <LumaService.h>
 #include <Externals/MMSF_API.h>
 #include <filesystem>
 #include <format>
@@ -33,14 +34,17 @@ namespace MPL::Config
         SKSE::RegistrationSet<const RE::TESObjectCELL*> cellLoad{ "OnCellChange"sv };
         std::unordered_map<std::filesystem::path, bool> folder_map;
         RE::TESRegion* lastRegion;
-        MPL::API::MMSF::ServiceMap* MMSF = nullptr;
-        std::unordered_map<RE::TESWeather*, MPL::WeatherPatcher::WeatherBaseline> weatherBaselines;
-        std::unordered_map<std::string, MPL::WeatherPatcher::Settings> settingsCache;
+        MPL::API::MMSF::ServiceMap* mmsfAPI = nullptr;
     };
     template <typename T>
         requires Named<T> && Patch<T>
     void LoadConfigFormID(typename T::Patch* form)
     {
+        const auto* source = form ? form->GetFile(0) : nullptr;
+        if (!source)
+        {
+            return;
+        }
         auto stat = StatData::GetSingleton();
         static std::vector<std::string> valid_files = RE::TESDataHandler::GetSingleton()->files |
                                                       std::views::filter([](RE::TESFile* file)
@@ -50,9 +54,9 @@ namespace MPL::Config
                                                       std::views::transform([](RE::TESFile* file)
                                                           { return std::string(file->GetFilename()); }) |
                                                       std::ranges::to<std::vector>();
-        for (auto local_file : valid_files)
+        for (const auto& local_file : valid_files)
         {
-            std::filesystem::path folder_name = std::filesystem::current_path() / "Data" / "Luma" / T::Name / local_file / form->GetFile(0)->GetFilename();
+            std::filesystem::path folder_name = std::filesystem::current_path() / "Data" / "Luma" / T::Name / local_file / source->GetFilename();
             if (stat->folder_map.contains(folder_name) && !stat->folder_map[folder_name])
             {
                 continue;
@@ -76,6 +80,22 @@ namespace MPL::Config
                 if (pch.has_value())
                 {
                     pch->Apply(form);
+                    if constexpr (std::same_as<T, MPL::Config::Cell::TESObjectCELL>)
+                    {
+                        const auto validSkylight =
+                            pch->skylight && pch->skylight->Get<RE::TESRegion>() != nullptr;
+                        LumaService::NotifyCellPatched(
+                            form,
+                            local_file.c_str(),
+                            validSkylight);
+                    }
+                    else
+                    {
+                        logger::warn(
+                            "Could not read Luma patch {}: {}",
+                            file_name.string(),
+                            pch.error().what());
+                    }
                 }
             }
         }

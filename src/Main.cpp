@@ -1,4 +1,3 @@
-#include "Externals/MMSF_API.h"
 #include "SKSE/Interfaces.h"
 #include <Config.h>
 #include <Hooks.h>
@@ -6,6 +5,28 @@
 #include <Plugin.h>
 #include <REL/Version.h>
 #include <SKSE/API.h>
+#include <CompatibilityChecker.h>
+namespace
+{
+    constexpr std::uint32_t kCellChangeSerializationVersion = 1;
+
+    void OnSKSEMessage(SKSE::MessagingInterface::Message* a_message)
+    {
+        if (!a_message)
+        {
+            return;
+        }
+        switch (a_message->type)
+        {
+        case SKSE::MessagingInterface::kDataLoaded:
+            MPL::CompatibilityChecker::Initialize();
+            break;
+        default:
+            break;
+        }
+    }
+}  // namespace
+
 void Serialize(SKSE::SerializationInterface* ser)
 {
     if (!ser->OpenRecord('CLCH', 0x1))
@@ -39,28 +60,13 @@ void Revert(SKSE::SerializationInterface* ser)
     MPL::Config::StatData::GetSingleton()->cellLoad.Revert(ser);
 }
 
-void MessageHandler(SKSE::MessagingInterface::Message* msg)
-{
-    auto sta = MPL::Config::StatData::GetSingleton();
-        switch (msg->type)
-        {
-        case SKSE::MessagingInterface::kPostLoad:
-            sta->MMSF = MPL::API::MMSF::RequestMMSFAPI();
-        break;
-    default:
-        break;
-    }
-}
-
 SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
     SKSE::Init(a_skse);
     logger::info("Game version : {}", a_skse->RuntimeVersion().string());
     MPL::Hooks::Install();
     SKSE::GetPapyrusInterface()->Register(MPL::Papyrus::Bind);
-    SKSE::GetPapyrusInterface()->Register(MPL::Papyrus::BindWeatherPatcher);
-    SKSE::GetMessagingInterface()->RegisterListener(MessageHandler);
-    SKSE::GetMessagingInterface()->RegisterListener(MPL::WeatherPatcher::OnSKSEMessage);
+    SKSE::GetMessagingInterface()->RegisterListener(OnSKSEMessage);
     auto ser = SKSE::GetSerializationInterface();
     ser->SetUniqueID('LUMA');
     ser->SetSaveCallback(Serialize);

@@ -12,19 +12,23 @@ namespace MPL::Config
         using Patch = RE::ExtraRoomRefData;
         void Apply(Patch* itm)
         {
+            if (!itm || !itm->data) return;
             if (this->imageSpace) itm->data->imageSpace = this->imageSpace->Get<RE::TESImageSpace>();
             if (this->lightingTemplate) itm->data->lightingTemplate = this->lightingTemplate->Get<RE::BGSLightingTemplate>();
         }
         static ExtraRoomRefData From(Patch* itm)
         {
             ExtraRoomRefData cpy;
+            if (!itm || !itm->data) return cpy;
             if (itm->data->imageSpace) cpy.imageSpace = MPL::Config::LiteForm::FromID(cpy.imageSpace->formID);
             if (itm->data->lightingTemplate) cpy.lightingTemplate = MPL::Config::LiteForm::FromID(cpy.imageSpace->formID);
             return cpy;
         }
         bool IsValid(TopLevel* itm)
         {
-            return (itm->extraList.HasType<RE::ExtraRoomRefData>() || this->addIfMissing.value_or(false)) && itm->GetBaseObject()->formID == 0x1F;
+            const auto* base = itm->GetBaseObject();
+            return base && base->formID == 0x1F &&
+                   (itm->extraList.HasType<RE::ExtraRoomRefData>() || this->addIfMissing.value_or(false));
         }
     };
 
@@ -45,7 +49,7 @@ namespace MPL::Config
                         auto rrd = itm->extraList.GetByType<RE::ExtraRoomRefData>();
                         this->roomBound->Apply(rrd);
                     }
-                    else if(this->roomBound->addIfMissing.value_or(false))
+                    else if (this->roomBound->addIfMissing.value_or(false))
                     {
                         auto erd = RE::BSExtraData::Create<RE::ExtraRoomRefData>();
                         this->roomBound->Apply(erd);
