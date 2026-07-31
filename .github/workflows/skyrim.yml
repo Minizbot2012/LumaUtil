@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
 
 env:
+  VCPKG_ROOT: C:\vcpkg
+  PRESET: vc2026-windows-vcpkg
   PROJECT_NAME: LumaUtil
 
 permissions:
@@ -30,13 +32,14 @@ jobs:
       - name: Build
         run: cmake --build --preset ${{env.PRESET}} --config Release
       - name: Archive
-        run: 7z a ${{ env.PROJECT_NAME }}.zip ./build/release/*.*
+        run: 7z a ${{ env.PROJECT_NAME }}.zip ./build/release/${{ env.PROJECT_NAME }.dll ./build/release/${{ env.PROJECT_NAME }.pdb
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v7
         with:
           name: Skyrim
           path: |
-            ./build/release/*.*
+            ./build/release/${{ env.PROJECT_NAME }}.dll
+            ./build/release/${{ env.PROJECT_NAME }}.pdb
       - name: Create & Upload Release
         id: upload-release
         uses: softprops/action-gh-release@v3
