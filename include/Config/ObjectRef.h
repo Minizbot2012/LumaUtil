@@ -1,13 +1,13 @@
 #pragma once
 #include <Config/Common.h>
 #include <optional>
-namespace MPL::Config
+namespace MPL::DynaForm::ObjectRef
 {
     struct ExtraRoomRefData
     {
         using TopLevel = RE::TESObjectREFR;
-        std::optional<MPL::Config::LiteForm> imageSpace;
-        std::optional<MPL::Config::LiteForm> lightingTemplate;
+        std::optional<DynaForm::LiteForm> imageSpace;
+        std::optional<DynaForm::LiteForm> lightingTemplate;
         std::optional<bool> addIfMissing;
         using Patch = RE::ExtraRoomRefData;
         void Apply(Patch* itm)
@@ -20,8 +20,8 @@ namespace MPL::Config
         {
             ExtraRoomRefData cpy;
             if (!itm || !itm->data) return cpy;
-            if (itm->data->imageSpace) cpy.imageSpace = MPL::Config::LiteForm::FromID(cpy.imageSpace->formID);
-            if (itm->data->lightingTemplate) cpy.lightingTemplate = MPL::Config::LiteForm::FromID(cpy.imageSpace->formID);
+            if (itm->data->imageSpace) cpy.imageSpace = DynaForm::LiteForm::FromID(cpy.imageSpace->formID);
+            if (itm->data->lightingTemplate) cpy.lightingTemplate = DynaForm::LiteForm::FromID(cpy.imageSpace->formID);
             return cpy;
         }
         bool IsValid(TopLevel* itm)

@@ -75,9 +75,10 @@ SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
     return true;
 };
 SKSEPluginInfo(
-        .Version = REL::Version{ MPL::Plugin::MAJOR, MPL::Plugin::MINOR, MPL::Plugin::PATCH, 0 },
-    .Name = "LumaUtil"sv,
-    .Author = "mini"sv,
+    .Version = REL::Version{ MPL::Plugin::MAJOR, MPL::Plugin::MINOR, MPL::Plugin::PATCH, 0 },
+    .Name = MPL::Plugin::PROJECT,
+    .Author = "Mini"sv,
     .SupportEmail = ""sv,
     .StructCompatibility = SKSE::StructCompatibility::Independent,
-    .RuntimeCompatibility = SKSE::VersionIndependence::AddressLibrary)
+    .RuntimeCompatibility = SKSE::VersionIndependence::AddressLibrary
+);

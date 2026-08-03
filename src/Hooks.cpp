@@ -18,7 +18,7 @@ namespace MPL::Hooks
                     "Loading Cell {:06X}:{}",
                     a_ref->GetLocalFormID(),
                     source->GetFilename());
-                MPL::Config::LoadConfigFormID<MPL::Config::Cell::TESObjectCELL>(a_ref);
+                MPL::Config::LoadConfigFormID<DynaForm::Cell::TESObjectCELL>(a_ref);
             }
             LumaService::NotifyCellInitialized(a_ref);
         }
@@ -42,7 +42,7 @@ namespace MPL::Hooks
                     "Loading IS {:06X}:{}",
                     a_ref->GetLocalFormID(),
                     source->GetFilename());
-                MPL::Config::LoadConfigFormID<MPL::Config::ImageSpace::TESImageSpace>(a_ref);
+                MPL::Config::LoadConfigFormID<DynaForm::ImageSpace::TESImageSpace>(a_ref);
             }
         }
         static void post_hook()
@@ -65,7 +65,7 @@ namespace MPL::Hooks
                     "Loading ObjRef {:06X}:{}",
                     a_ref->GetLocalFormID(),
                     source->GetFilename());
-                MPL::Config::LoadConfigFormID<MPL::Config::TESObjectREFR>(a_ref);
+                MPL::Config::LoadConfigFormID<DynaForm::ObjectRef::TESObjectREFR>(a_ref);
             }
             LumaService::NotifyReferenceInitialized(a_ref);
         }
@@ -89,7 +89,7 @@ namespace MPL::Hooks
                     "Loading TMPL {:06X}:{}",
                     a_ref->GetLocalFormID(),
                     source->GetFilename());
-                MPL::Config::LoadConfigFormID<MPL::Config::Template::BGSLightingTemplate>(a_ref);
+                MPL::Config::LoadConfigFormID<DynaForm::Template::BGSLightingTemplate>(a_ref);
             }
         }
         static void post_hook()
@@ -112,7 +112,7 @@ namespace MPL::Hooks
                     "Loading Light {:06X}:{}",
                     a_ref->GetLocalFormID(),
                     source->GetFilename());
-                MPL::Config::LoadConfigFormID<MPL::Config::TESObjectLIGH>(a_ref);
+                MPL::Config::LoadConfigFormID<DynaForm::Lights::TESObjectLIGH>(a_ref);
             }
         }
         static void post_hook()
@@ -135,7 +135,7 @@ namespace MPL::Hooks
                     "Loading WorldSpace {:06X}:{}",
                     a_ref->GetLocalFormID(),
                     source->GetFilename());
-                Config::LoadConfigFormID<MPL::Config::Worldspace::TESWorldSpace>(a_ref);
+                Config::LoadConfigFormID<DynaForm::Worldspace::TESWorldSpace>(a_ref);
             }
         }
         static void post_hook()

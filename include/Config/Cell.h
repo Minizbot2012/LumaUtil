@@ -2,7 +2,7 @@
 #include <Config/Common.h>
 #include <Config/Templates.h>
 #include <optional>
-namespace MPL::Config::Cell
+namespace MPL::DynaForm::Cell
 {
     struct Flags
     {
@@ -44,7 +44,7 @@ namespace MPL::Config::Cell
         }
         static Flags From(Patch* itm)
         {
-            Flags cpy{
+            return{
                 .IsInteriorCell = (*itm & RE::TESObjectCELL::Flag::kIsInteriorCell).underlying() != 0,
                 .HasWater = (*itm & RE::TESObjectCELL::Flag::kHasWater).underlying() != 0,
                 .CanTravelFromHere = (*itm & RE::TESObjectCELL::Flag::kCanTravelFromHere).underlying() != 0,
@@ -62,17 +62,16 @@ namespace MPL::Config::Cell
                 .Unknown14 = (itm->underlying() & 1 << 14) != 0,
                 .SunlightShadows = (itm->underlying() & 1 << 15) != 0,
             };
-            return cpy;
         }
     };
     struct TESObjectCELL
     {
         static constexpr std::string_view Name = "Cell";
         std::optional<Flags> flags;
-        std::optional<MPL::Config::LiteForm> skylight;
-        std::optional<MPL::Config::Template::INTERIOR_DATA> lighting;
-        std::optional<MPL::Config::LiteForm> lightTemplate;
-        std::optional<MPL::Config::LiteForm> imagespace;
+        std::optional<DynaForm::LiteForm> skylight;
+        std::optional<DynaForm::Template::INTERIOR_DATA> lighting;
+        std::optional<DynaForm::LiteForm> lightTemplate;
+        std::optional<DynaForm::LiteForm> imagespace;
         using Patch = RE::TESObjectCELL;
         void Apply(Patch* itm)
         {
@@ -128,24 +127,20 @@ namespace MPL::Config::Cell
             if (itm->IsInteriorCell())
             {
                 cpy.lighting = Template::INTERIOR_DATA::From(itm->GetRuntimeData().cellData.interior);
-                cpy.lighting->ambient->alpha = {};
-                cpy.lighting->fogColorFar->alpha = {};
-                cpy.lighting->fogColorNear->alpha = {};
-                cpy.lighting->directional->alpha = {};
             }
             if (itm->GetRuntimeData().lightingTemplate != nullptr)
             {
-                cpy.lightTemplate = MPL::Config::LiteForm::FromID(itm->GetRuntimeData().lightingTemplate->formID);
+                cpy.lightTemplate = DynaForm::LiteForm::FromID(itm->GetRuntimeData().lightingTemplate->formID);
             }
             if (itm->extraList.HasType<RE::ExtraCellImageSpace>())
             {
                 auto* dat = itm->extraList.GetByType<RE::ExtraCellImageSpace>();
-                if (dat->imageSpace != nullptr) cpy.imagespace = MPL::Config::LiteForm::FromID(dat->imageSpace->formID);
+                if (dat->imageSpace != nullptr) cpy.imagespace = DynaForm::LiteForm::FromID(dat->imageSpace->formID);
             }
             if (itm->extraList.HasType<RE::ExtraCellSkyRegion>())
             {
                 auto* dat = itm->extraList.GetByType<RE::ExtraCellSkyRegion>();
-                if (dat->skyRegion != nullptr) cpy.skylight = MPL::Config::LiteForm::FromID(dat->skyRegion->formID);
+                if (dat->skyRegion != nullptr) cpy.skylight = DynaForm::LiteForm::FromID(dat->skyRegion->formID);
             }
             return cpy;
         }

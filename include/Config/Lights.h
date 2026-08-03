@@ -2,7 +2,7 @@
 #include <Config/Common.h>
 #include <cstdint>
 #include <optional>
-namespace MPL::Config
+namespace MPL::DynaForm::Lights
 {
     struct TES_LIGHT_FLAGS
     {
@@ -45,31 +45,31 @@ namespace MPL::Config
         static TES_LIGHT_FLAGS From(Patch* itm)
         {
             auto underlying = itm->underlying();
-            TES_LIGHT_FLAGS cpy;
-            if ((underlying & 1 << 0) != 0) cpy.Dynamic = true;
-            if ((underlying & 1 << 1) != 0) cpy.CanCarry = true;
-            if ((underlying & 1 << 2) != 0) cpy.Negative = true;
-            if ((underlying & 1 << 3) != 0) cpy.Flicker = true;
-            if ((underlying & 1 << 4) != 0) cpy.DeepCopy = true;
-            if ((underlying & 1 << 5) != 0) cpy.OffByDefault = true;
-            if ((underlying & 1 << 6) != 0) cpy.FlickerSlow = true;
-            if ((underlying & 1 << 7) != 0) cpy.Pulse = true;
-            if ((underlying & 1 << 8) != 0) cpy.PulseSlow = true;
-            if ((underlying & 1 << 9) != 0) cpy.Spotlight = true;
-            if ((underlying & 1 << 10) != 0) cpy.SpotShadow = true;
-            if ((underlying & 1 << 11) != 0) cpy.HemiShadow = true;
-            if ((underlying & 1 << 12) != 0) cpy.OmniShadow = true;
-            if ((underlying & 1 << 13) != 0) cpy.PortalStrict = true;
-            if ((underlying & 1 << 14) != 0) cpy.InverseSquare = true;
-            if ((underlying & 1 << 15) != 0) cpy.Linear = true;
-            return cpy;
+            return {
+                .Dynamic = ((underlying & 1 << 0) != 0),
+                .CanCarry = ((underlying & 1 << 1) != 0),
+                .Negative = ((underlying & 1 << 2) != 0),
+                .Flicker = ((underlying & 1 << 3) != 0),
+                .DeepCopy = ((underlying & 1 << 4) != 0),
+                .OffByDefault = ((underlying & 1 << 5) != 0),
+                .FlickerSlow = ((underlying & 1 << 6) != 0),
+                .Pulse = ((underlying & 1 << 7) != 0),
+                .PulseSlow = ((underlying & 1 << 8) != 0),
+                .Spotlight = ((underlying & 1 << 9) != 0),
+                .SpotShadow = ((underlying & 1 << 10) != 0),
+                .HemiShadow = ((underlying & 1 << 11) != 0),
+                .OmniShadow = ((underlying & 1 << 12) != 0),
+                .PortalStrict = ((underlying & 1 << 13) != 0),
+                .InverseSquare = ((underlying & 1 << 14) != 0),
+                .Linear = ((underlying & 1 << 15) != 0)
+            };
         }
     };
     struct OBJ_LIGH
     {
         std::optional<std::int32_t> time;
         std::optional<std::uint32_t> radius;
-        std::optional<MPL::Config::Color> color;
+        std::optional<DynaForm::Color> color;
         std::optional<TES_LIGHT_FLAGS> flags;
         std::optional<float> fallofExponent;
         std::optional<float> fov;
@@ -93,18 +93,18 @@ namespace MPL::Config
         }
         static OBJ_LIGH From(Patch* itm)
         {
-            OBJ_LIGH cpy;
-            cpy.time = itm->time;
-            cpy.radius = itm->radius;
-            cpy.color = MPL::Config::Color::From(&itm->color);
-            cpy.flags = MPL::Config::TES_LIGHT_FLAGS::From(&itm->flags);
-            cpy.fallofExponent = itm->fallofExponent;
-            cpy.fov = itm->fov;
-            cpy.nearDistance = itm->nearDistance;
-            cpy.flickerPeriodRecip = itm->flickerPeriodRecip / 100;
-            cpy.flickerIntensityAmplitude = itm->flickerIntensityAmplitude;
-            cpy.flickerMovementAmplitude = itm->flickerMovementAmplitude;
-            return cpy;
+            return {
+                .time = itm->time,
+                .radius = itm->radius,
+                .color = DynaForm::Color::From(&itm->color),
+                .flags = TES_LIGHT_FLAGS::From(&itm->flags),
+                .fallofExponent = itm->fallofExponent,
+                .fov = itm->fov,
+                .nearDistance = itm->nearDistance,
+                .flickerPeriodRecip = itm->flickerPeriodRecip,
+                .flickerIntensityAmplitude = itm->flickerIntensityAmplitude,
+                .flickerMovementAmplitude = itm->flickerMovementAmplitude
+            };
         }
     };
     struct TESObjectLIGH
@@ -112,7 +112,7 @@ namespace MPL::Config
         static constexpr std::string_view Name = "Light";
         std::optional<OBJ_LIGH> data;
         std::optional<float> fade;
-        std::optional<MPL::Config::NiColor> emittanceColor;
+        std::optional<DynaForm::NiColor> emittanceColor;
         using Patch = RE::TESObjectLIGH;
         void Apply(Patch* itm)
         {
@@ -122,11 +122,11 @@ namespace MPL::Config
         }
         static TESObjectLIGH From(Patch* itm)
         {
-            TESObjectLIGH cpy;
-            cpy.data = OBJ_LIGH::From(&itm->data);
-            cpy.fade = itm->fade;
-            cpy.emittanceColor = MPL::Config::NiColor::From(&itm->emittanceColor);
-            return cpy;
+            return {
+                .data = OBJ_LIGH::From(&itm->data),
+                .fade = itm->fade,
+                .emittanceColor = NiColor::From(&itm->emittanceColor)
+            };
         }
     };
 }  // namespace MPL::Config

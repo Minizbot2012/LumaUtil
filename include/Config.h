@@ -5,7 +5,6 @@
 #include <Config/Lights.h>
 #include <Config/ObjectRef.h>
 #include <Config/Templates.h>
-#include <Config/Weathers.h>
 #include <Config/Worldspace.h>
 #include <LumaService.h>
 #include <Externals/MMSF_API.h>
@@ -80,10 +79,10 @@ namespace MPL::Config
                 if (pch.has_value())
                 {
                     pch->Apply(form);
-                    if constexpr (std::same_as<T, MPL::Config::Cell::TESObjectCELL>)
+                    if constexpr (std::same_as<T, DynaForm::Cell::TESObjectCELL>)
                     {
                         const auto validSkylight =
-                            pch->skylight && pch->skylight->Get<RE::TESRegion>() != nullptr;
+                            pch->skylight && pch->skylight->template Get<RE::TESRegion>() != nullptr;
                         LumaService::NotifyCellPatched(
                             form,
                             local_file.c_str(),

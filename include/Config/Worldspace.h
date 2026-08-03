@@ -1,12 +1,12 @@
 #pragma once
 #include <Config/Common.h>
-namespace MPL::Config::Worldspace
+namespace MPL::DynaForm::Worldspace
 {
     struct TESWorldSpace
     {
         static constexpr std::string_view Name = "Worldspace";
-        std::optional<MPL::Config::LiteForm> climate;
-        std::optional<MPL::Config::LiteForm> lightTemplate;
+        std::optional<DynaForm::LiteForm> climate;
+        std::optional<DynaForm::LiteForm> lightTemplate;
         using Patch = RE::TESWorldSpace;
         static TESWorldSpace From(Patch* itm)
         {

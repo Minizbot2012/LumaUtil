@@ -1,7 +1,7 @@
 #pragma once
 #include <Config/Common.h>
 #include <cstdint>
-namespace MPL::Config::Template
+namespace MPL::DynaForm::Template
 {
 
     struct MinMaxColor
@@ -11,11 +11,10 @@ namespace MPL::Config::Template
         using Patch = RE::BGSDirectionalAmbientLightingColors::Directional::MaxMin<RE::Color>;
         static MinMaxColor From(Patch* itm)
         {
-            MinMaxColor cpy{
+            return {
                 .max = Color::From(&itm->max),
                 .min = Color::From(&itm->min),
             };
-            return cpy;
         }
         void Apply(Patch* itm)
         {
@@ -61,12 +60,11 @@ namespace MPL::Config::Template
         };
         static DirectionalAmbientLightingColor From(Patch* itm)
         {
-            DirectionalAmbientLightingColor cpy{
+            return {
                 .directional = Directional::From(&itm->directional),
                 .specular = Color::From(&itm->specular),
                 .scale = itm->fresnelPower,
             };
-            return cpy;
         }
     };
     struct Inherit
@@ -99,7 +97,7 @@ namespace MPL::Config::Template
         }
         static Inherit From(Patch* itm)
         {
-            Inherit cpy{
+            return {
                 .AmbientColor = (*itm & RE::INTERIOR_DATA::Inherit::kAmbientColor).underlying() != 0,
                 .DirectionalColor = (*itm & RE::INTERIOR_DATA::Inherit::kDirectionalColor).underlying() != 0,
                 .FogColor = (*itm & RE::INTERIOR_DATA::Inherit::kFogColor).underlying() != 0,
@@ -112,7 +110,6 @@ namespace MPL::Config::Template
                 .FogMax = (*itm & RE::INTERIOR_DATA::Inherit::kFogMax).underlying() != 0,
                 .LightFadeDistance = (*itm & RE::INTERIOR_DATA::Inherit::kLightFadeDistances).underlying() != 0,
             };
-            return cpy;
         }
     };
     struct INTERIOR_DATA
@@ -155,7 +152,7 @@ namespace MPL::Config::Template
         }
         static INTERIOR_DATA From(Patch* itm)
         {
-            INTERIOR_DATA cpy{
+            return {
                 .ambient = Color::From(&itm->ambient),
                 .directional = Color::From(&itm->directional),
                 .fogColorNear = Color::From(&itm->fogColorNear),
@@ -173,7 +170,6 @@ namespace MPL::Config::Template
                 .inherit = Inherit::From(&itm->lightingTemplateInheritanceFlags),
                 .directionalAmbientLightingColors = DirectionalAmbientLightingColor::From(&itm->directionalAmbientLightingColors),
             };
-            return cpy;
         }
     };
 
@@ -190,24 +186,10 @@ namespace MPL::Config::Template
         };
         static BGSLightingTemplate From(Patch* itm)
         {
-            BGSLightingTemplate cpy{
+            return {
                 .data = INTERIOR_DATA::From(&itm->data),
                 .directionalAmbientLightingColors = DirectionalAmbientLightingColor::From(&itm->directionalAmbientLightingColors),
             };
-            cpy.data->inherit = {};
-            cpy.data->directionalAmbientLightingColors = {};
-            cpy.data->ambient->alpha = {};
-            cpy.data->fogColorFar->alpha = {};
-            cpy.data->fogColorNear->alpha = {};
-            cpy.data->directional->alpha = {};
-            cpy.directionalAmbientLightingColors->specular->alpha = {};
-            cpy.directionalAmbientLightingColors->directional->x->max->alpha = {};
-            cpy.directionalAmbientLightingColors->directional->y->max->alpha = {};
-            cpy.directionalAmbientLightingColors->directional->z->max->alpha = {};
-            cpy.directionalAmbientLightingColors->directional->x->min->alpha = {};
-            cpy.directionalAmbientLightingColors->directional->y->min->alpha = {};
-            cpy.directionalAmbientLightingColors->directional->z->min->alpha = {};
-            return cpy;
         }
     };
 }  // namespace MPL::Config::Template

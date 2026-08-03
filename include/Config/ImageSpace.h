@@ -1,6 +1,6 @@
 #pragma once
 #include <Config/Common.h>
-namespace MPL::Config::ImageSpace
+namespace MPL::DynaForm::ImageSpace
 {
     struct HDR
     {
@@ -28,7 +28,7 @@ namespace MPL::Config::ImageSpace
         };
         static HDR From(HDR::Patch* itm)
         {
-            HDR cpy{
+            return {
                 .eyeAdaptSpeed = itm->eyeAdaptSpeed,
                 .bloomBlurRadius = itm->bloomBlurRadius,
                 .bloomThreshold = itm->bloomThreshold,
@@ -39,7 +39,6 @@ namespace MPL::Config::ImageSpace
                 .skyScale = itm->skyScale,
                 .eyeAdaptStrength = itm->eyeAdaptStrength,
             };
-            return cpy;
         }
     };
 
@@ -57,12 +56,11 @@ namespace MPL::Config::ImageSpace
         }
         static Cinematic From(Patch* itm)
         {
-            Cinematic cpy{
+            return {
                 .saturation = itm->saturation,
                 .brightness = itm->brightness,
                 .contrast = itm->contrast,
             };
-            return cpy;
         }
     };
 
@@ -78,11 +76,10 @@ namespace MPL::Config::ImageSpace
         }
         static Tint From(Patch* itm)
         {
-            Tint cpy{
+            return {
                 .amount = itm->amount,
                 .color = NiColor::From(&itm->color),
             };
-            return cpy;
         }
     };
 
@@ -100,12 +97,11 @@ namespace MPL::Config::ImageSpace
         }
         static DepthOfField From(Patch* itm)
         {
-            DepthOfField cpy{
+            return {
                 .strength = itm->strength,
                 .distance = itm->distance,
                 .range = itm->range,
             };
-            return cpy;
         }
     };
 
@@ -125,13 +121,12 @@ namespace MPL::Config::ImageSpace
         }
         static ImageSpaceBaseData From(Patch* itm)
         {
-            ImageSpaceBaseData cpy{
+            return {
                 .hdr = HDR::From(&itm->hdr),
                 .cinematic = Cinematic::From(&itm->cinematic),
                 .tint = Tint::From(&itm->tint),
                 .depthOfField = DepthOfField::From(&itm->depthOfField),
             };
-            return cpy;
         }
     };
 
@@ -146,10 +141,9 @@ namespace MPL::Config::ImageSpace
         }
         static TESImageSpace From(TESImageSpace::Patch* itm)
         {
-            TESImageSpace cpy{
+            return {
                 .data = ImageSpaceBaseData::From(&itm->data)
             };
-            return cpy;
         }
     };
 }  // namespace MPL::Config::ImageSpace
