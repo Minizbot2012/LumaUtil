@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/alandtse/CommonLibSSE-NG
-    REF 15ad90b31b2ca09cf477c7e1a43ff5ff05af120f
+    REF 5ae93ea9059aae23990ad7f2cbf3a2624d85c117
     HEAD_REF ng
 )
 
@@ -19,7 +19,7 @@ file(COPY ${OPENVR_FILES} DESTINATION "${SOURCE_PATH}/extern/openvr")
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
-    OPTIONS -DBUILD_TESTS=off -DSKSE_SUPPORT_XBYAK=on
+    OPTIONS -DBUILD_TESTS=off -DSKSE_SUPPORT_XBYAK=on -DSKSE_SUPPORT_PATCH_SAFETY=off
 )
 
 vcpkg_install_cmake()
