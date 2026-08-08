@@ -6,6 +6,8 @@
 #include <Config/ObjectRef.h>
 #include <Config/Templates.h>
 #include <Config/Worldspace.h>
+#include <Config/MagicEffect.h>
+#include <Config/Projectile.h>
 #include <LumaService.h>
 #include <Externals/MMSF_API.h>
 #include <filesystem>
@@ -33,7 +35,7 @@ namespace MPL::Config
         SKSE::RegistrationSet<const RE::TESObjectCELL*> cellLoad{ "OnCellChange"sv };
         std::unordered_map<std::filesystem::path, bool> folder_map;
         RE::TESRegion* lastRegion;
-        MPL::API::MMSF::ServiceMap* mmsfAPI = nullptr;
+        MPL::API::MMSF::Interface* mmsfAPI = nullptr;
     };
     template <typename T>
         requires Named<T> && Patch<T>
