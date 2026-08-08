@@ -122,6 +122,46 @@ namespace MPL::Hooks
         static inline REL::Relocation<decltype(thunk)> func;
     };
 
+    struct InitMGEF {
+        using Target = RE::EffectSetting;
+        static inline void thunk(Target* a_ref)
+        {
+            func(a_ref);
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr) {
+                DetailedLogging::Info(
+                    "Loading MagicEffect {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
+                MPL::Config::LoadConfigFormID<DynaForm::MagicEffect::EffectSetting>(a_ref);
+            }
+        }
+        static void post_hook()
+        {
+            logger::info("Installed InitMGEF Hook");
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+    };
+
+    struct InitPROJ {
+        using Target = RE::BGSProjectile;
+        static inline void thunk(Target* a_ref)
+        {
+            func(a_ref);
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr) {
+                DetailedLogging::Info(
+                    "Loading Projectile {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
+                MPL::Config::LoadConfigFormID<DynaForm::Projectile::BGSProjectile>(a_ref);
+            }
+        }
+        static void post_hook()
+        {
+            logger::info("Installed InitPROJ Hook");
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+    };
+
     struct InitWorldspace
     {
         using Target = RE::TESWorldSpace;
@@ -173,6 +213,8 @@ namespace MPL::Hooks
         stl::install_hook<InitREFR>();
         stl::install_hook<InitTMPL>();
         stl::install_hook<InitLGHT>();
+        stl::install_hook<InitMGEF>();
+        stl::install_hook<InitPROJ>();
         stl::install_hook<InitWorldspace>();
         stl::install_hook<CellChange>();
     }
