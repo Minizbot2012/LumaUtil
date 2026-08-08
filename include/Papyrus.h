@@ -6,7 +6,7 @@
 
 namespace MPL::Papyrus
 {
-    inline MPL::API::MMSF::ServiceMap* GetMMSFAPI()
+    inline MPL::API::MMSF::Interface* GetMMSFAPI()
     {
         auto* stat = MPL::Config::StatData::GetSingleton();
         if (!stat->mmsfAPI)

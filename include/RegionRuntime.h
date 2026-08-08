@@ -32,7 +32,7 @@ namespace MPL::RegionRuntime
         return selected;
     }
 
-    inline std::string EditorID(API::MMSF::ServiceMap* a_api, RE::TESRegion* a_region)
+    inline std::string EditorID(API::MMSF::Interface* a_api, RE::TESRegion* a_region)
     {
         return a_api && a_region ? a_api->LookupEDIDForFormID(a_region->formID) : std::string{};
     }
@@ -53,7 +53,7 @@ namespace MPL::RegionRuntime
         return nullptr;
     }
 
-    inline std::string GetRegion(API::MMSF::ServiceMap* a_api, RE::TESObjectCELL* a_cell)
+    inline std::string GetRegion(API::MMSF::Interface* a_api, RE::TESObjectCELL* a_cell)
     {
         if (!a_api) return {};
         if (auto* region = GetRegionForm(a_cell)) return EditorID(a_api, region);

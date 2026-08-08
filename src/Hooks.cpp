@@ -124,6 +124,7 @@ namespace MPL::Hooks
 
     struct InitMGEF {
         using Target = RE::EffectSetting;
+        static inline constexpr VariantIndex index = VariantIndex(0x13);
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
@@ -144,6 +145,7 @@ namespace MPL::Hooks
 
     struct InitPROJ {
         using Target = RE::BGSProjectile;
+        static inline constexpr VariantIndex index = VariantIndex(0x13);
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
