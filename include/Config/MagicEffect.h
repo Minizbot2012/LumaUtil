@@ -5,13 +5,16 @@ namespace MPL::DynaForm::MagicEffect {
     struct EffectSettingData {
         using Patch = RE::EffectSetting::EffectSettingData;
         std::optional<LiteForm> light;
+        std::optional<LiteForm> associatedForm;
         static EffectSettingData From(Patch* itm) {
             return {
-                .light = LiteForm::FromForm(itm->light)
+                .light = LiteForm::FromForm(itm->light),
+                .associatedForm = LiteForm::FromForm(itm->associatedForm),
             };
         }
         void Apply(Patch* itm) {
             if(this->light) itm->light = this->light->Get<RE::TESObjectLIGH>();
+            if(this->associatedForm) itm->associatedForm = this->associatedForm->Get<RE::TESForm>();
         }
     };
     struct EffectSetting {
