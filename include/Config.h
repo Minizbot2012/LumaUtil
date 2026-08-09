@@ -1,16 +1,16 @@
 #pragma once
 #include <Config/Cell.h>
 #include <Config/Common.h>
+#include <Config/Explosion.h>
 #include <Config/ImageSpace.h>
 #include <Config/Lights.h>
+#include <Config/MagicEffect.h>
 #include <Config/ObjectRef.h>
+#include <Config/Projectile.h>
 #include <Config/Templates.h>
 #include <Config/Worldspace.h>
-#include <Config/MagicEffect.h>
-#include <Config/Projectile.h>
-#include <Config/Explosion.h>
-#include <LumaService.h>
 #include <Externals/MMSF_API.h>
+#include <LumaService.h>
 #include <filesystem>
 #include <format>
 #include <string>
@@ -91,13 +91,13 @@ namespace MPL::Config
                             local_file.c_str(),
                             validSkylight);
                     }
-                    else
-                    {
-                        logger::warn(
-                            "Could not read Luma patch {}: {}",
-                            file_name.string(),
-                            pch.error().what());
-                    }
+                }
+                else
+                {
+                    logger::warn(
+                        "Could not read Luma patch {}: {}",
+                        file_name.string(),
+                        pch.error().what());
                 }
             }
         }
