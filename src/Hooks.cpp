@@ -3,6 +3,7 @@
 #include <Hooks.h>
 #include <LumaService.h>
 #include <DetailedLogging.h>
+#include <RE/B/BGSExplosion.h>
 namespace MPL::Hooks
 {
     struct InitCell
@@ -183,6 +184,29 @@ namespace MPL::Hooks
         static void post_hook()
         {
             logger::info("Installed InitWorldspace Hook");
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+    };
+
+    struct InitExplosion
+    {
+        using Target = RE::BGSExplosion;
+        static inline constexpr VariantIndex index = VariantIndex(0x13);
+        static inline void thunk(Target* a_ref)
+        {
+            func(a_ref);
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
+            {
+                DetailedLogging::Info(
+                    "Loading Explosion {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
+                Config::LoadConfigFormID<DynaForm::Explosion::BGSExplosion>(a_ref);
+            }
+        }
+        static void post_hook()
+        {
+            logger::info("Installed InitExplosion Hook");
         }
         static inline REL::Relocation<decltype(thunk)> func;
     };

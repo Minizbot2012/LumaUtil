@@ -8,6 +8,7 @@
 #include <Config/Worldspace.h>
 #include <Config/MagicEffect.h>
 #include <Config/Projectile.h>
+#include <Config/Explosion.h>
 #include <LumaService.h>
 #include <Externals/MMSF_API.h>
 #include <filesystem>
