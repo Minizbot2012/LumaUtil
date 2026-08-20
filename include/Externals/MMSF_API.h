@@ -41,17 +41,17 @@ namespace MPL::API::MMSF
         Interface* API;
     };
     static const char* sender = "MMSF";
-    inline Interface* RequestMMSFAPI()
+    [[nodiscard]] inline Interface* RequestMMSFAPI()
     {
-        MMSFMessage message;
-        SKSE::GetMessagingInterface()->Dispatch(MMSFMessage::kMessage_GetInterface, &message, sizeof(MMSFMessage), sender);
-        if (message.API != nullptr)
+        MMSFMessage message{};
+        if (auto* messaging = SKSE::GetMessagingInterface())
         {
-            return message.API;
+            messaging->Dispatch(
+                MMSFMessage::kMessage_GetInterface,
+                &message,
+                sizeof(MMSFMessage),
+                sender);
         }
-        else
-        {
-            return nullptr;
-        }
+        return message.API;
     }
 }  // namespace MPL::API::MMSF
