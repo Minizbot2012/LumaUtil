@@ -16,10 +16,12 @@ namespace MPL::API::MMSF
     {
         return static_cast<MMSFAPIFeatures>(static_cast<std::underlying_type_t<MMSFAPIFeatures>>(lhs) & static_cast<std::underlying_type_t<MMSFAPIFeatures>>(rhs));
     }
-    constexpr MMSFAPIFeatures EmbedVersion(uint8_t ver) {
+    constexpr MMSFAPIFeatures EmbedVersion(uint8_t ver)
+    {
         return static_cast<MMSFAPIFeatures>(static_cast<std::underlying_type_t<MMSFAPIFeatures>>(ver) << 56);
     }
-    constexpr uint8_t GetVersion(MMSFAPIFeatures features) {
+    constexpr uint8_t GetVersion(MMSFAPIFeatures features)
+    {
         return static_cast<uint8_t>(static_cast<std::underlying_type_t<MMSFAPIFeatures>>(features) >> 56);
     }
     class Interface
