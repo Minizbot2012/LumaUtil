@@ -1,6 +1,7 @@
 #include "SKSE/Interfaces.h"
 #include <Config.h>
 #include <Hooks.h>
+#include <LPCommand.h>
 #include <Papyrus.h>
 #include <Plugin.h>
 #include <REL/Version.h>
@@ -18,7 +19,11 @@ namespace
         }
         switch (a_message->type)
         {
+        case SKSE::MessagingInterface::kPostLoad:
+            MPL::LPCommand::CaptureCommandSlot(true);
+            break;
         case SKSE::MessagingInterface::kDataLoaded:
+            MPL::LPCommand::ReleaseCommandSlot();
             MPL::CompatibilityChecker::Initialize();
             break;
         default:
@@ -63,6 +68,7 @@ void Revert(SKSE::SerializationInterface* ser)
 SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
     SKSE::Init(a_skse);
+    MPL::LPCommand::CaptureCommandSlot(false);
     logger::info("Game version : {}", a_skse->RuntimeVersion().string());
     MPL::Hooks::Install();
     SKSE::GetPapyrusInterface()->Register(MPL::Papyrus::Bind);
