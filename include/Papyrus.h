@@ -6,14 +6,17 @@
 
 namespace MPL::Papyrus
 {
-    inline MPL::API::MMSF::Interface* GetMMSFAPI()
+    inline MPL::API::MMSF::IEDIDCache* GetMMSFAPI()
     {
         auto* stat = MPL::Config::StatData::GetSingleton();
         if (!stat->mmsfAPI)
         {
             stat->mmsfAPI = MPL::API::MMSF::RequestMMSFAPI();
         }
-        return stat->mmsfAPI;
+        if(!stat->mmsfEDID) {
+            stat->mmsfEDID = stat->mmsfAPI ? static_cast<MPL::API::MMSF::IEDIDCache*>(stat->mmsfAPI->QueryService("EDID")) : nullptr;
+        }
+        return stat->mmsfEDID;
     }
 
     inline std::string GetRegion(RE::StaticFunctionTag*, RE::TESObjectCELL* cl)
@@ -31,7 +34,7 @@ namespace MPL::Papyrus
         auto* form = api ? api->LookupCachedForm(region) : nullptr;
         if (!form && api)
         {
-            const auto formID = api->LookupFormIDForEDID(region);
+            const auto formID = api->LookupEdid(region);
             form = formID ? RE::TESForm::LookupByID(formID) : nullptr;
         }
         auto* skyRegion = form ? form->As<RE::TESRegion>() : nullptr;

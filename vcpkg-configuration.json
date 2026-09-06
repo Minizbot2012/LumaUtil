@@ -3,6 +3,5 @@
     "kind": "git",
     "baseline": "40facba081517d75548893c437a9974c416836b1",
     "repository": "https://github.com/microsoft/vcpkg"
-  },
-  "overlay-ports": ["CMake/ports/"]
+  }
 }

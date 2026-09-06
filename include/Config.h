@@ -37,6 +37,7 @@ namespace MPL::Config
         std::unordered_map<std::filesystem::path, bool> folder_map;
         RE::TESRegion* lastRegion;
         MPL::API::MMSF::Interface* mmsfAPI = nullptr;
+        MPL::API::MMSF::IEDIDCache* mmsfEDID = nullptr;
     };
     template <typename T>
         requires Named<T> && Patch<T>
