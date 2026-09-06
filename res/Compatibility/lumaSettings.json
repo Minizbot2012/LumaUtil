@@ -1,14 +1,14 @@
 {
-    "id":  "LumaUtil",
-    "LumaManifest":  true,
-    "detailedLogging":  false,
-    "version":  "2.0.0.0",
-    "compatibility":  [
-        {
-            "id":  "MMSF",
-            "minimumVersion":  "2.0.0.0",
-            "Required":  true,
-            "notification":  "Luma Utility requires MMSF 2.0 or newer."
-        }
-    ]
+  "id": "LumaUtil",
+  "LumaManifest": true,
+  "detailedLogging": false,
+  "version": "2.0.0.0",
+  "compatibility": [
+    {
+      "id": "MMSF",
+      "minimumVersion": "2.0.0.0",
+      "Required": true,
+      "notification": "Luma Utility requires MMSF 2.0 or newer."
+    }
+  ]
 }
