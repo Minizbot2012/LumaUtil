@@ -1,5 +1,10 @@
 {
   "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 40,
+    "patch": 0
+  },
   "configurePresets": [
     {
       "name": "common",
@@ -163,9 +168,26 @@
         "common"
       ],
       "binaryDir": "${sourceDir}/build/release-linux-clangcl-vcpkg-all"
+    },
+    {
+      "name": "vs-windows-vcpkg",
+      "inherits": [
+        "buildtype-release",
+        "architecture-x64",
+        "platform-win32-unicode",
+        "generator-ninja",
+        "compiler-msvc",
+        "packaging-vcpkg",
+        "common"
+      ],
+      "binaryDir": "${sourceDir}/build/release-msvc-vcpkg-all"
     }
   ],
   "buildPresets": [
+    {
+      "name": "vs-windows-vcpkg",
+      "configurePreset": "vs-windows-vcpkg"
+    },
     {
       "name": "clang-windows-vcpkg",
       "configurePreset": "clang-windows-vcpkg"

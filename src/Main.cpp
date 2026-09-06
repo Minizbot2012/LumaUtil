@@ -9,8 +9,6 @@
 #include <CompatibilityChecker.h>
 namespace
 {
-    constexpr std::uint32_t kCellChangeSerializationVersion = 1;
-
     void OnSKSEMessage(SKSE::MessagingInterface::Message* a_message)
     {
         if (!a_message)

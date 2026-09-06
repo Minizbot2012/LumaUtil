@@ -123,6 +123,10 @@ namespace MPL::DynaForm::Cell
         {
             TESObjectCELL cpy{
                 .flags = Flags::From(&itm->cellFlags),
+                .skylight = std::nullopt,
+                .lighting = std::nullopt,
+                .lightTemplate = std::nullopt,
+                .imagespace = std::nullopt,
             };
             if (itm->IsInteriorCell())
             {
