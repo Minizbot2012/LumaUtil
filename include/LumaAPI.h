@@ -1,17 +1,16 @@
 #pragma once
 
+#include <Externals/MMSF_API.h>
 #include <cstdint>
-
 namespace RE
 {
     class TESObjectCELL;
     class TESObjectREFR;
 }  // namespace RE
 
-namespace MPL::LumaAPI
+namespace MPL::API::Luma
 {
-    inline constexpr std::uint32_t kVersion = 4;
-
+    inline constexpr std::uint8_t kVersion = 4;
     struct ClientCallbacks
     {
         // The ID is copied during registration.
@@ -27,16 +26,11 @@ namespace MPL::LumaAPI
             bool) = nullptr;
     };
 
-    struct Interface
+    class ILumaPluginService : public API::MMSF::IPluginService
     {
-        std::uint32_t version = kVersion;
-        bool (*RegisterClient)(const ClientCallbacks*) = nullptr;
-        bool (*GetProviderSettings)(const char*, bool*, bool*) = nullptr;
-        bool (*UpdateProviderSettings)(
-            const char*,
-            std::int8_t,
-            std::int8_t) = nullptr;
+    public:
+        virtual bool RegisterClient(const ClientCallbacks*) = 0;
+        virtual bool GetProviderSettings(const char*, bool*, bool*) = 0;
+        virtual bool UpdateProviderSettings(const char*, std::int8_t, std::int8_t) = 0;
     };
-
-    using RequestInterface = const Interface* (*) (std::uint32_t);
-}  // namespace MPL::LumaAPI
+}  // namespace MPL::API::Luma

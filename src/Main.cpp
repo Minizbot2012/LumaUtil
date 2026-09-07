@@ -1,34 +1,35 @@
-#include "SKSE/Interfaces.h"
+#include <CompatibilityChecker.h>
 #include <Config.h>
+#include <Externals/MMSF_API.h>
 #include <Hooks.h>
 #include <LPCommand.h>
+#include <LumaService.h>
 #include <Papyrus.h>
 #include <Plugin.h>
 #include <REL/Version.h>
-#include <SKSE/API.h>
-#include <CompatibilityChecker.h>
-namespace
+void OnSKSEMessage(SKSE::MessagingInterface::Message* a_message)
 {
-    void OnSKSEMessage(SKSE::MessagingInterface::Message* a_message)
+    if (!a_message)
     {
-        if (!a_message)
-        {
-            return;
-        }
-        switch (a_message->type)
-        {
-        case SKSE::MessagingInterface::kPostLoad:
-            MPL::LPCommand::CaptureCommandSlot(true);
-            break;
-        case SKSE::MessagingInterface::kDataLoaded:
-            MPL::LPCommand::ReleaseCommandSlot();
-            MPL::CompatibilityChecker::Initialize();
-            break;
-        default:
-            break;
-        }
+        return;
     }
-}  // namespace
+    switch (a_message->type)
+    {
+    case MPL::API::MMSF::MMSFMessage::kMessage_MMSFServicesReg:
+        static_cast<MPL::API::MMSF::MMSFMessage*>(a_message->data)->API->RegisterService(MPL::LumaService::LumaService::GetSingleton());
+        break;
+    case SKSE::MessagingInterface::kPostLoad:
+        SKSE::GetMessagingInterface()->RegisterListener("MMSF", OnSKSEMessage);
+        MPL::LPCommand::CaptureCommandSlot(true);
+        break;
+    case SKSE::MessagingInterface::kDataLoaded:
+        MPL::LPCommand::ReleaseCommandSlot();
+        MPL::CompatibilityChecker::Initialize();
+        break;
+    default:
+        break;
+    }
+}
 
 void Serialize(SKSE::SerializationInterface* ser)
 {
@@ -71,6 +72,7 @@ SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
     MPL::Hooks::Install();
     SKSE::GetPapyrusInterface()->Register(MPL::Papyrus::Bind);
     SKSE::GetMessagingInterface()->RegisterListener(OnSKSEMessage);
+    SKSE::GetMessagingInterface()->RegisterListener(nullptr, OnSKSEMessage);
     auto ser = SKSE::GetSerializationInterface();
     ser->SetUniqueID('LUMA');
     ser->SetSaveCallback(Serialize);
@@ -79,10 +81,9 @@ SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
     return true;
 };
 SKSEPluginInfo(
-    .Version = REL::Version{ MPL::Plugin::MAJOR, MPL::Plugin::MINOR, MPL::Plugin::PATCH, 0 },
+        .Version = REL::Version{ MPL::Plugin::MAJOR, MPL::Plugin::MINOR, MPL::Plugin::PATCH, 0 },
     .Name = MPL::Plugin::PROJECT,
     .Author = "Mini"sv,
     .SupportEmail = ""sv,
     .StructCompatibility = SKSE::StructCompatibility::Independent,
-    .RuntimeCompatibility = SKSE::VersionIndependence::AddressLibrary
-);
+    .RuntimeCompatibility = SKSE::VersionIndependence::AddressLibrary);
