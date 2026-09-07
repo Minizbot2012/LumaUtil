@@ -90,16 +90,15 @@ target_precompile_headers(
 )
 
 if(MSVC)
-	target_compile_options(
-		"${PROJECT_NAME}"
-		PUBLIC
-
+  target_compile_options(
+    "${PROJECT_NAME}"
+    PUBLIC
 		# Enhanced debug information for optimized code (includes all type info in PDB for RE/debugging)
 		"$<$<CONFIG:Debug>:/Zo>"
 
 		# Standards conformance
 		/Zc:preprocessor # Enable conforming preprocessor (required for STATIC_ASSERT_SIZE variadic macro)
-
+		/Z7
 		# disable warnings
 		"$<$<CONFIG:Debug>:/wd4702>" # unreachable code: debug builds don't optimize away compile-time conditionals
 		/wd4005 # macro redefinition
@@ -127,13 +126,12 @@ if(MSVC)
 		/wd5204 # 'type-name': class has virtual functions, but its trivial destructor is not virtual; instances of objects derived from this class may not be destructed correctly
 		/wd5220 # 'member': a non-static data member with a volatile qualified type no longer implies that compiler generated copy / move constructors and copy / move assignment operators are not trivial
 	)
-endif()
-
-if(MSVC)
 	target_link_options(
 		"${PROJECT_NAME}"
-		PUBLIC
-		# Generate complete PDB with all type information for reverse engineering
-		"$<$<CONFIG:Debug>:/DEBUG:FULL>"
+		PRIVATE
+		/DEBUG
+		/INCREMENTAL:NO
+		/OPT:REF
+		/OPT:ICF
 	)
 endif()
