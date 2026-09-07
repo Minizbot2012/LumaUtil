@@ -146,7 +146,7 @@
     {
       "name": "clang-windows-vcpkg",
       "inherits": [
-        "buildtype-relwithdebinfo",
+        "buildtype-release",
         "architecture-x64",
         "platform-win32-unicode",
         "generator-ninja",
