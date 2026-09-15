@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Externals/MMSF_API.h"
 #include <LumaAPI.h>
 
 namespace MPL::LumaService
@@ -21,7 +22,7 @@ namespace MPL::LumaService
     private:
         std::mutex callbackLock;
         std::vector<RegisteredClient> callbacks;
-
+        MPL::API::MMSF::ICompatService* compatService;
     public:
         static LumaService* GetSingleton()
         {
@@ -30,14 +31,15 @@ namespace MPL::LumaService
         }
         std::uint8_t GetVersion() override { return MPL::API::Luma::kVersion; }
         std::string GetName() override { return "LUMA"; }
-        void Initialize() override {}
+        void Initialize() override {
+            compatService = static_cast<MPL::API::MMSF::ICompatService*>(API::MMSF::RequestMMSFAPI()->QueryService("Compat"));
+        }
         rfl::Generic::Object Save() override { return rfl::Generic::Object(); }
         void Load(rfl::Generic::Object) override {}
         std::vector<RegisteredClient> GetCallbacks();
         bool RegisterClient(const MPL::API::Luma::ClientCallbacks*) override;
         bool GetProviderSettings(const char*, bool*, bool*) override;
         bool UpdateProviderSettings(const char*, std::int8_t, std::int8_t) override;
-
     };
     void NotifyCellInitialized(RE::TESObjectCELL*);
     void NotifyReferenceInitialized(RE::TESObjectREFR*);

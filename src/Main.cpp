@@ -1,4 +1,3 @@
-#include <CompatibilityChecker.h>
 #include <Config.h>
 #include <Externals/MMSF_API.h>
 #include <Hooks.h>
@@ -24,7 +23,6 @@ void OnSKSEMessage(SKSE::MessagingInterface::Message* a_message)
         break;
     case SKSE::MessagingInterface::kDataLoaded:
         MPL::LPCommand::ReleaseCommandSlot();
-        MPL::CompatibilityChecker::Initialize();
         break;
     default:
         break;

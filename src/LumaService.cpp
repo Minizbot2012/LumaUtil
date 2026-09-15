@@ -1,9 +1,9 @@
-#include <CompatibilityChecker.h>
 #include <LumaAPI.h>
 #include <LumaService.h>
 #include <algorithm>
 #include <cstdint>
 #include <exception>
+#include <filesystem>
 #include <mutex>
 #include <optional>
 #include <string_view>
@@ -13,41 +13,20 @@ namespace MPL::LumaService
 {
     bool LumaService::GetProviderSettings(const char* a_id, bool* a_detailedLogging, bool* a_notifications)
     {
-        try
+        if (!compatService)
         {
-            if (!a_id || !*a_id)
-            {
-                return false;
-            }
-            const auto settings =
-                CompatibilityChecker::LoadManifest(a_id);
-            if (!settings)
-            {
-                return false;
-            }
-            if (a_detailedLogging)
-            {
-                *a_detailedLogging = settings->detailedLogging;
-            }
-            if (a_notifications)
-            {
-                *a_notifications = settings->notifications;
-            }
-            return true;
+            return false;
         }
-        catch (const std::exception& error)
-        {
-            logger::error(
-                "[Luma API] GetProviderSettings failed: {}",
-                error.what());
-        }
-        catch (...)
-        {
-            logger::error(
-                "[Luma API] GetProviderSettings failed with an unknown exception");
-        }
-        return false;
+        return compatService->GetProviderSettings(a_id, a_detailedLogging, a_notifications);
     };
+    bool LumaService::UpdateProviderSettings(const char* a_id, std::int8_t a_detailedLogging, std::int8_t a_notifications)
+    {
+        if (!compatService)
+        {
+            return false;
+        }
+        return compatService->UpdateProviderSettings(a_id, a_detailedLogging, a_notifications);
+    }
     bool SameClient(
         const RegisteredClient& a_left,
         const RegisteredClient& a_right)
@@ -112,43 +91,6 @@ namespace MPL::LumaService
         std::scoped_lock lock(callbackLock);
         return callbacks;
     };
-    bool LumaService::UpdateProviderSettings(
-        const char* a_id,
-        const std::int8_t a_detailedLogging,
-        const std::int8_t a_notifications)
-    {
-        try
-        {
-            if (!a_id || !*a_id)
-            {
-                return false;
-            }
-            const auto detailed =
-                a_detailedLogging < 0 ?
-                    std::nullopt :
-                    std::optional<bool>(a_detailedLogging != 0);
-            const auto notifications =
-                a_notifications < 0 ?
-                    std::nullopt :
-                    std::optional<bool>(a_notifications != 0);
-            return CompatibilityChecker::UpdateManifestSettings(
-                a_id,
-                detailed,
-                notifications);
-        }
-        catch (const std::exception& error)
-        {
-            logger::error(
-                "[Luma API] UpdateProviderSettings failed: {}",
-                error.what());
-        }
-        catch (...)
-        {
-            logger::error(
-                "[Luma API] UpdateProviderSettings failed with an unknown exception");
-        }
-        return false;
-    }
     template <class Callback>
     void NotifyClients(
         const std::string_view a_event,

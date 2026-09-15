@@ -1,6 +1,6 @@
 #pragma once
-#include <rfl/Generic.hpp>
 #include <cstdint>
+#include <rfl/Generic.hpp>
 namespace MPL::API::MMSF
 {
     enum struct MMSFAPIFeatures : uint64_t
@@ -48,6 +48,13 @@ namespace MPL::API::MMSF
         virtual std::string LookupFormID(RE::FormID) = 0;
         virtual RE::TESForm* LookupCachedForm(std::string) = 0;
         virtual void CacheForm(std::string, RE::FormID) = 0;
+    };
+
+    class ICompatService : public IPluginService
+    {
+    public:
+        virtual bool GetProviderSettings(const char*, bool*, bool*) = 0;
+        virtual bool UpdateProviderSettings(const char*, const std::int8_t, const std::int8_t) = 0;
     };
 
     class Interface
