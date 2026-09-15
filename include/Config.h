@@ -2,6 +2,7 @@
 #include <Config/Cell.h>
 #include <Config/Common.h>
 #include <Config/Explosion.h>
+#include <Config/Hazard.h>
 #include <Config/ImageSpace.h>
 #include <Config/Lights.h>
 #include <Config/MagicEffect.h>

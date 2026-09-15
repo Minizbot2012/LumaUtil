@@ -1,9 +1,9 @@
+#include "Config.h"
+#include <DetailedLogging.h>
 #include <Hooking.h>
-#include <Config.h>
 #include <Hooks.h>
 #include <LumaService.h>
-#include <DetailedLogging.h>
-#include <RE/B/BGSExplosion.h>
+#include <RE/B/BGSHazard.h>
 namespace MPL::Hooks
 {
     struct InitCell
@@ -123,13 +123,15 @@ namespace MPL::Hooks
         static inline REL::Relocation<decltype(thunk)> func;
     };
 
-    struct InitMGEF {
+    struct InitMGEF
+    {
         using Target = RE::EffectSetting;
         static inline constexpr VariantIndex index = VariantIndex(0x13);
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr) {
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
+            {
                 DetailedLogging::Info(
                     "Loading MagicEffect {:06X}:{}",
                     a_ref->GetLocalFormID(),
@@ -144,13 +146,15 @@ namespace MPL::Hooks
         static inline REL::Relocation<decltype(thunk)> func;
     };
 
-    struct InitPROJ {
+    struct InitPROJ
+    {
         using Target = RE::BGSProjectile;
         static inline constexpr VariantIndex index = VariantIndex(0x13);
         static inline void thunk(Target* a_ref)
         {
             func(a_ref);
-            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr) {
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
+            {
                 DetailedLogging::Info(
                     "Loading Projectile {:06X}:{}",
                     a_ref->GetLocalFormID(),
@@ -210,12 +214,35 @@ namespace MPL::Hooks
         }
         static inline REL::Relocation<decltype(thunk)> func;
     };
+    struct InitHazard
+    {
+        using Target = RE::BGSHazard;
+        static inline constexpr VariantIndex index = VariantIndex(0x13);
+        static inline void thunk(Target* a_ref)
+        {
+            func(a_ref);
+            if (auto* source = a_ref ? a_ref->GetFile(0) : nullptr)
+            {
+                DetailedLogging::Info(
+                    "Loading Hazard {:06X}:{}",
+                    a_ref->GetLocalFormID(),
+                    source->GetFilename());
+                Config::LoadConfigFormID<DynaForm::Hazard::Hazard>(a_ref);
+            }
+            return;
+        }
+        static void post_hook()
+        {
+            logger::info("Installed InitHazard Hook");
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+    };
 
     struct CellChange
     {
         using Target = RE::PlayerCharacter;
         static inline constexpr VariantIndex index = VariantIndex(0x98, 0x98, 0x99);
-        static inline void thunk(RE::PlayerCharacter* a_ref, const RE::TESObjectCELL* cl)
+        static inline void thunk(Target* a_ref, const RE::TESObjectCELL* cl)
         {
             auto* destination = const_cast<RE::TESObjectCELL*>(cl);
             LumaService::NotifyCellChanging(destination);
@@ -232,10 +259,12 @@ namespace MPL::Hooks
         }
         static inline REL::Relocation<decltype(thunk)> func;
     };
+
     void Install()
     {
         stl::install_hook<InitCell>();
         stl::install_hook<InitIS>();
+        stl::install_hook<InitHazard>();
         stl::install_hook<InitREFR>();
         stl::install_hook<InitTMPL>();
         stl::install_hook<InitLGHT>();
