@@ -1,6 +1,6 @@
 {
   "id": "LumaUtil",
-  "LumaManifest": true,
+  "MMSFManifest": true,
   "detailedLogging": false,
   "version": "2.0.0.0",
   "compatibility": [
