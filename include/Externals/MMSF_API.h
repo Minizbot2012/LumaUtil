@@ -5,6 +5,7 @@ namespace MPL::API::MMSF
 {
     enum struct MMSFAPIFeatures : uint64_t
     {
+        kNone = 0,
         kCaching = 1 << 0,
         kAllocator = 1 << 1,
         kCoreService = 1 << 2,
@@ -25,6 +26,11 @@ namespace MPL::API::MMSF
     {
         return static_cast<uint8_t>(static_cast<std::underlying_type_t<MMSFAPIFeatures>>(features) >> 56);
     }
+    constexpr bool HasFeature(MMSFAPIFeatures features, MMSFAPIFeatures feature)
+    {
+        return (features & feature) != MPL::API::MMSF::MMSFAPIFeatures::kNone;
+    }
+
     class IPluginService
     {
     public:

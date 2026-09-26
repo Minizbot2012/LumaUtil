@@ -13,7 +13,20 @@ namespace MPL::Papyrus
         {
             stat->mmsfAPI = MPL::API::MMSF::RequestMMSFAPI();
         }
-        if(!stat->mmsfEDID) {
+        if(!API::MMSF::HasFeature(stat->mmsfAPI->GetVersion(), API::MMSF::MMSFAPIFeatures::kCoreService))
+        {
+            logger::error("Core service not available");
+            stl::report_and_fail("Core service not available");
+            return nullptr;
+        }
+        if(!API::MMSF::HasFeature(stat->mmsfAPI->GetVersion(), API::MMSF::MMSFAPIFeatures::kCaching))
+        {
+            logger::error("EDID Cache not available");
+            stl::report_and_fail("EDID Cache not available");
+            return nullptr;
+        }
+        if(!stat->mmsfEDID)
+        {
             stat->mmsfEDID = stat->mmsfAPI ? static_cast<MPL::API::MMSF::IEDIDCache*>(stat->mmsfAPI->QueryService("EDID")) : nullptr;
         }
         return stat->mmsfEDID;
