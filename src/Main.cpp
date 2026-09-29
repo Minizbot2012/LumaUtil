@@ -5,7 +5,6 @@
 #include <LumaService.h>
 #include <Papyrus.h>
 #include <Plugin.h>
-#include <REL/Version.h>
 void OnSKSEMessage(SKSE::MessagingInterface::Message* a_message)
 {
     if (!a_message)
@@ -64,7 +63,8 @@ void Revert(SKSE::SerializationInterface* ser)
 
 SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
-    SKSE::Init(a_skse);
+    SKSE::InitInfo info;
+    SKSE::Init(a_skse, info);
     MPL::LPCommand::CaptureCommandSlot(false);
     logger::info("Game version : {}", a_skse->RuntimeVersion().string());
     MPL::Hooks::Install();
