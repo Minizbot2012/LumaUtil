@@ -6,7 +6,7 @@
 #include <RE/B/BGSHazard.h>
 namespace MPL::Hooks
 {
-    struct InitCell
+    struct InitCELL
     {
         using Target = RE::TESObjectCELL;
         static inline constexpr VariantIndex index = VariantIndex(0x13);
@@ -30,7 +30,7 @@ namespace MPL::Hooks
         static inline REL::Relocation<decltype(thunk)> func;
     };
 
-    struct InitIS
+    struct InitIMGS
     {
         using Target = RE::TESImageSpace;
         static inline constexpr VariantIndex index = VariantIndex(0x13);
@@ -169,7 +169,7 @@ namespace MPL::Hooks
         static inline REL::Relocation<decltype(thunk)> func;
     };
 
-    struct InitWorldspace
+    struct InitWRLD
     {
         using Target = RE::TESWorldSpace;
         static inline constexpr VariantIndex index = VariantIndex(0x13);
@@ -192,7 +192,7 @@ namespace MPL::Hooks
         static inline REL::Relocation<decltype(thunk)> func;
     };
 
-    struct InitExplosion
+    struct InitEXPL
     {
         using Target = RE::BGSExplosion;
         static inline constexpr VariantIndex index = VariantIndex(0x13);
@@ -214,7 +214,7 @@ namespace MPL::Hooks
         }
         static inline REL::Relocation<decltype(thunk)> func;
     };
-    struct InitHazard
+    struct InitHAZD
     {
         using Target = RE::BGSHazard;
         static inline constexpr VariantIndex index = VariantIndex(0x13);
@@ -262,15 +262,16 @@ namespace MPL::Hooks
 
     void Install()
     {
-        stl::install_hook<InitCell>();
-        stl::install_hook<InitIS>();
-        stl::install_hook<InitHazard>();
+        stl::install_hook<InitCELL>();
+        stl::install_hook<InitIMGS>();
         stl::install_hook<InitREFR>();
         stl::install_hook<InitTMPL>();
         stl::install_hook<InitLGHT>();
         stl::install_hook<InitMGEF>();
         stl::install_hook<InitPROJ>();
-        stl::install_hook<InitWorldspace>();
+        stl::install_hook<InitWRLD>();
+        stl::install_hook<InitEXPL>();
+        stl::install_hook<InitHAZD>();
         stl::install_hook<CellChange>();
     }
 }  // namespace MPL::Hooks
