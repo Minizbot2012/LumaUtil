@@ -1,5 +1,4 @@
 #include <Config/Common.h>
-#include <RE/T/TESObjectLIGH.h>
 namespace MPL::DynaForm::Explosion {
     struct BGSExplosionData {
         using Patch = RE::BGSExplosionData;
