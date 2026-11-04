@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Archive
-        run: 7z a ${{ env.PROJECT_NAME }}-Scripts.zip ./scripts/**
+        run: 7z a ${{ env.PROJECT_NAME }}-Scripts.zip ./res/Data/**
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
