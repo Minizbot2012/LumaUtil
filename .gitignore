@@ -1,6 +1,5 @@
 build*
-.vscode*
-.cache
+.cache/
+.vscode/
 compile_commands.json
-.xmake
 __cmake*
