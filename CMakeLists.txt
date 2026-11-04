@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.40)
 set(NAME "LumaUtil" CACHE STRING "")
-set(VERSION 2.0.0.0 CACHE STRING "")
+set(VERSION 2.1.0.0 CACHE STRING "")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ---- Project ----
