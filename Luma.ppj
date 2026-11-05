@@ -2,16 +2,16 @@
 <PapyrusProject xmlns="PapyrusProject.xsd"
     Flags="TESV_Papyrus_Flags.flg"
     Game="sse"
-    Output="Data\Scripts"
+    Output="res\Data\Scripts"
     Optimize="false"
     Release="false"
     Final="false"
     Anonymize="true">
     <Imports>
-        <Import>Data\Source\Scripts</Import>
+        <Import>res\Data\Source\Scripts</Import>
         <Import>..\..\..\..\Bethesda\Data\SSE\mods\OG_SRC\Source\Scripts</Import>
     </Imports>
     <Folders>
-        <Folder>.\Data\Source\Scripts</Folder>
+        <Folder>.\res\Data\Source\Scripts</Folder>
     </Folders>
 </PapyrusProject>
