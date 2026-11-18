@@ -77,7 +77,7 @@ if(CMAKE_HOST_UNIX)
     # Keep this on HINTS rather than PATH: llvm-mingw ships its own
     # clang-cl/lld-link, and on PATH they shadow the real toolchain's and
     # break the link step with unrelated-looking errors.
-    find_program(FXC2_MINGW_CLANGXX NAMES x86_64-w64-mingw32-clang++ HINTS "$ENV{LLVM_MINGW_BIN}")
+    find_program(FXC2_MINGW_CLANGXX NAMES clang++ HINTS "$ENV{LLVM_MINGW_BIN}")
     if(NOT FXC2_MINGW_CLANGXX)
         message(FATAL_ERROR "${PORT}: cross-compiling from a Linux host needs an llvm-mingw toolchain (x86_64-w64-mingw32-clang++) on PATH, or pointed at via the LLVM_MINGW_BIN environment variable, to build the fxc2 shader-compiler stand-in. See https://github.com/WasabiIceCream/fxc2.")
     endif()
@@ -92,7 +92,7 @@ if(CMAKE_HOST_UNIX)
 
     set(FXC2_EXE "${CURRENT_BUILDTREES_DIR}/fxc2.exe")
     execute_process(
-        COMMAND "${FXC2_MINGW_CLANGXX}" -static "${FXC2_SOURCE_PATH}/fxc2.cpp" -o "${FXC2_EXE}"
+        COMMAND "${FXC2_MINGW_CLANGXX}" -target x86_64-w64-mingw32 -static "${FXC2_SOURCE_PATH}/fxc2.cpp" -pthread -o "${FXC2_EXE}"
         RESULT_VARIABLE FXC2_BUILD_RESULT
     )
     if(NOT FXC2_BUILD_RESULT EQUAL 0)
